@@ -10,7 +10,7 @@
       </div>
       <div class="back">
         <div class="count-down">
-          {{ countDownText }}
+          <span>{{ countDownText }}</span>
         </div>
       </div>
     </div>
@@ -29,20 +29,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { usePomodoroStore } from "@/models/pomodoro";
-import Clock from "@/components/Clock/index.vue";
-import { CurrentTime } from "@vant/use";
-import { NButton, NIcon } from "naive-ui";
-import { Play, Pause, Stop } from "@vicons/ionicons5";
-const pomodoroStore = usePomodoroStore();
+import { computed } from 'vue'
+import { usePomodoroStore } from '@/models/pomodoro'
+import Clock from '@/components/Clock/index.vue'
+import { CurrentTime } from '@vant/use'
+import { NIcon } from 'naive-ui'
+import { Play, Pause, Stop } from '@vicons/ionicons5'
+const pomodoroStore = usePomodoroStore()
 
 const countDownText = computed(() => {
-  const keys: (keyof CurrentTime)[] = ["hours", "minutes", "seconds"];
+  const keys: (keyof CurrentTime)[] = ['hours', 'minutes', 'seconds']
   return keys
-    .map((key) => ("00" + pomodoroStore.countDown[key]).substr(-2))
-    .join(":");
-});
+    .map((key) => ('00' + pomodoroStore.countDown[key]).substr(-2))
+    .join(':')
+})
 </script>
 
 <style lang="less" scoped>
@@ -54,6 +54,7 @@ const countDownText = computed(() => {
   flex-direction: column;
   align-items: center;
   position: relative;
+  gap: 40px;
   .background {
     position: absolute;
     top: 0;
@@ -61,14 +62,16 @@ const countDownText = computed(() => {
     bottom: 0;
     left: 0;
     opacity: 0.6;
+    background: white;
+    transition: all .3s;
   }
 
   .actions {
-    height: 20vh;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 50px;
+    padding-top: 50vh;
 
     .control {
       width: 80px;
@@ -84,18 +87,18 @@ const countDownText = computed(() => {
 
   .flip-container {
     width: 55vh;
-    height: 55vh;
+    height: auto;
     position: relative;
     transform-style: preserve-3d;
 
     .front,
     .back {
-      width: 100%;
-      height: 100%;
-
       position: absolute;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
+      box-sizing: border-box;
     }
 
     .front {
@@ -110,16 +113,21 @@ const countDownText = computed(() => {
       transition: all 500ms ease;
 
       .count-down {
-        height: 100%;
-        width: 100%;
+        widows: 100%;
+        padding-bottom: 100%;
         border: 2px solid white;
         border-radius: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 100;
-        font-weight: 900;
-        color: white;
+        position: relative;
+
+        span {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 100;
+          font-weight: 900;
+          color: white;
+        }
       }
     }
   }

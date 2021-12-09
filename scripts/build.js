@@ -1,13 +1,11 @@
 const path = require('path')
 const chalk = require('chalk')
 const ListR = require('listr')
-const builder = require('electron-builder')
 const { build: viteBuild, createLogger } = require('vite')
 
-const builderConfig = require('../build.config')
 const { MAIN_ROOT, RENDERER_ROOT } = require('./constants')
 
-function build() {
+function build () {
   const tasks = new ListR([
     {
       title: 'building renderer process',
@@ -17,12 +15,9 @@ function build() {
       title: 'building main process',
       task: buildMainProcess
     }
-  ])
+  ], { concurrent: 2 })
 
   tasks.run()
-    .then(() => {
-      builder.build(builderConfig)
-    })
     .catch((error) => {
       createLogger().error(
         chalk.red(`error during build application:\n${error.stack}`)
@@ -31,7 +26,7 @@ function build() {
     })
 }
 
-async function buildRenderer() {
+async function buildRenderer () {
   try {
     const rendererOutput = await viteBuild({
       root: RENDERER_ROOT,
@@ -49,12 +44,12 @@ async function buildRenderer() {
   }
 }
 
-async function buildMainProcess() {
+async function buildMainProcess () {
   try {
     const buildOutput = await viteBuild({
       root: MAIN_ROOT,
       build: {
-        outDir: path.resolve(__dirname, '../dist/main'),
+        outDir: path.resolve(__dirname, '../dist/main')
       }
     })
     return buildOutput
